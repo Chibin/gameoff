@@ -1,8 +1,9 @@
 use amethyst::{
-    assets::{AssetStorage, Loader},
+    animation::{Animation, InterpolationFunction, MaterialChannel, MaterialPrimitive, Sampler},
+    assets::{AssetStorage, Handle, Loader},
     prelude::*,
     renderer::{
-        MaterialTextureSet, PngFormat, SpriteSheet, SpriteSheetFormat, SpriteSheetHandle, Texture,
+        Material, MaterialTextureSet, PngFormat, SpriteSheet, SpriteSheetFormat, SpriteSheetHandle, Texture,
         TextureMetadata,
     },
 };
@@ -52,4 +53,49 @@ pub fn texture(world: &mut World, png_path: &str) -> u64 {
     material_texture_set.insert(texture_id, texture_handle);
 
     texture_id
+}
+
+/// Sprite animations
+pub fn penguin_animation(
+    world: &mut World, png_path: &str, ron_path: &str) -> Handle<Animation<Material>> {
+
+    let sprite_sheet_handle = sprite_sheet(world, png_path, ron_path);
+
+    let sprite_sheet_store = world.read_resource::<AssetStorage<SpriteSheet>>();
+    let something = sprite_sheet_store.get(&sprite_sheet_handle);
+    let sprite_sheet = something.unwrap();
+
+    let sprite_offsets = sprite_sheet.sprites[0..1]
+        .iter()
+        .map(|sprite| sprite.into())
+        .collect::<Vec<MaterialPrimitive>>();
+
+    let sprite_offset_sampler = {
+        Sampler {
+            input: vec![0.],
+            function: InterpolationFunction::Step,
+            output: sprite_offsets,
+        }
+    };
+
+    let texture_sampler = Sampler {
+        input: vec![0.],
+        function: InterpolationFunction::Step,
+        output: vec![MaterialPrimitive::Texture(sprite_sheet.texture_id)],
+    };
+
+    let loader = world.write_resource::<Loader>();
+    let sampler_animation_handle =
+        loader.load_from_data(sprite_offset_sampler, (), &world.read_resource());
+    let texture_animation_handle =
+        loader.load_from_data(texture_sampler, (), &world.read_resource());
+
+    let animation = Animation {
+        nodes: vec![
+            (0, MaterialChannel::AlbedoTexture, texture_animation_handle),
+            (0, MaterialChannel::AlbedoOffset, sampler_animation_handle),
+        ],
+    };
+
+    loader.load_from_data(animation, (), &world.read_resource())
 }

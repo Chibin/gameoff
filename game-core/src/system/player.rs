@@ -5,7 +5,7 @@ use amethyst::{
     input::InputHandler,
     renderer::{SpriteRender, Transparent},
 };
-use crate::component::{Animation, Enemy, Motion, Player, Projectile};
+use crate::component::{AAnimation, Enemy, Motion, Player, Projectile};
 use rand::distributions::{Distribution, Uniform};
 
 pub struct Movement;
@@ -63,7 +63,7 @@ impl<'s> System<'s> for Attack {
         WriteStorage<'s, Motion>,
         WriteStorage<'s, SpriteRender>,
         WriteStorage<'s, Transparent>,
-        WriteStorage<'s, Animation>,
+        WriteStorage<'s, AAnimation>,
         Entities<'s>,
         Read<'s, InputHandler<String, String>>,
     );
@@ -123,7 +123,7 @@ impl<'s> System<'s> for Attack {
                 flip_vertical: false,
             };
 
-            let anim = Animation {
+            let anim = AAnimation {
                 total_frames: 2,
                 max_count_till_next_frame: 0.5,
                 frame_life_time_count: 0.5,

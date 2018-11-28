@@ -3,7 +3,7 @@ use amethyst::{
     ecs::{Entities, Join, Read, ReadStorage, System, WriteStorage},
     renderer::{SpriteRender, Transparent},
 };
-use crate::component::{Animation, Enemy, Player};
+use crate::component::{AAnimation, Enemy, Player};
 use rand::distributions::{Distribution, Uniform};
 
 pub struct Movement;
@@ -27,7 +27,7 @@ impl<'s> System<'s> for Spawner {
         WriteStorage<'s, SpriteRender>,
         WriteStorage<'s, Transparent>,
         Entities<'s>,
-        WriteStorage<'s, Animation>,
+        WriteStorage<'s, AAnimation>,
     );
 
     fn run(
@@ -65,7 +65,7 @@ impl<'s> System<'s> for Spawner {
                     flip_vertical: false,
                 };
 
-                let anim = Animation {
+                let anim = AAnimation {
                     total_frames: 2,
                     max_count_till_next_frame: 0.7,
                     frame_life_time_count: 0.7,

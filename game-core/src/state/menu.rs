@@ -6,7 +6,7 @@ use amethyst::{
     renderer::Camera,
     utils::ortho_camera::{CameraNormalizeMode, CameraOrtho},
 };
-use component::{Animation, Player};
+use component::{AAnimation, Player};
 use crate::load;
 use crate::state::Game;
 use crate::system::*;
@@ -18,14 +18,16 @@ impl SimpleState<'static, 'static> for Menu {
         let world = data.world;
 
         world.register::<Player>();
-        world.register::<Animation>();
+        world.register::<AAnimation>();
 
         world.add_resource(load::LoadedTextures::default());
 
         let player_sprite_sheet_handle = load::sprite_sheet(world, "FRONT.png", "FRONT.ron");
-        let _penguin_sprite_sheet_handle =
-            load::sprite_sheet(world, "penguinFront.png", "penguinFront.ron");
+        //let penguin_sprite_sheet_handle =
+        //    load::sprite_sheet(world, "penguinFront.png", "penguinFront.ron");
         let _ = load::sprite_sheet(world, "bubble.png", "bubble.ron");
+
+        let penguin_animation_handle = load::penguin_animation(world, "penguinFront.png", "penguinFront.ron");
 
         crate::map::load_map_sprites(world);
         let parent = Player::new(world, &player_sprite_sheet_handle);

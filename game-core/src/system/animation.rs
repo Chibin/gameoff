@@ -3,14 +3,14 @@ use amethyst::{
     ecs::{Entities, Join, Read, System, WriteStorage},
     renderer::SpriteRender,
 };
-use crate::component::Animation;
+use crate::component::AAnimation;
 
 pub struct Frame;
 
 impl<'s> System<'s> for Frame {
     type SystemData = (
         WriteStorage<'s, SpriteRender>,
-        WriteStorage<'s, Animation>,
+        WriteStorage<'s, AAnimation>,
         Entities<'s>,
         Read<'s, Time>,
     );

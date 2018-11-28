@@ -6,7 +6,7 @@ use amethyst::{
     prelude::*,
     renderer::{SpriteRender, SpriteSheetHandle, Transparent},
 };
-use crate::component::Animation;
+use crate::component::AAnimation;
 
 #[derive(Debug)]
 pub struct Player {
@@ -42,7 +42,7 @@ impl Player {
             flip_vertical: false,
         };
 
-        let anim = Animation {
+        let anim = AAnimation {
             total_frames: 8,
             max_count_till_next_frame: 0.5,
             frame_life_time_count: 0.5,
